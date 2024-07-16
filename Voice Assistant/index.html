@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA - Virtual Assistant</title>
+    <link rel="shortcut icon" href="avatar.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;600;700&display=swap");
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto Mono", monospace;
+}
+
+h1 {
+    text-align: center;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff00cc, #333399, #66ffcc, #ff3366);
+    background-size: 400% 400%;
+    animation: backgroundAnimation 15s ease infinite;
+    margin: 0;
+    overflow: hidden;
+}
+
+@keyframes backgroundAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.main {
+    min-height: 100vh;
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container {
+    padding: 10px;
+}
+
+.image {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.image img {
+    width: 350px;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.image img.animate-logo {
+    transform: scale(1.1); /* Scale up the logo on interaction */
+}
+
+.image .neon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%; /* Cover the entire parent container */
+    height: 100%; /* Cover the entire parent container */
+    border-radius: 50%; /* Create a circular shape */
+    background: radial-gradient(circle, rgba(255, 0, 204, 0.5), rgba(255, 0, 204, 0));
+    filter: blur(10px);
+    animation: glow 2s infinite alternate;
+    z-index: -1; /* Move the glow behind the image */
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 20px rgba(255, 0, 204, 0.7), 0 0 40px rgba(255, 0, 204, 0.7), 0 0 60px rgba(255, 0, 204, 0.7), 0 0 80px rgba(255, 0, 204, 0.7);
+    }
+    to {
+        box-shadow: 0 0 40px rgba(255, 0, 204, 1), 0 0 80px rgba(255, 0, 204, 1), 0 0 120px rgba(255, 0, 204, 1), 0 0 160px rgba(255, 0, 204, 1);
+    }
+}
+
+.input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40vw;
+    height: 50px;
+    border-radius: 20px;
+    background: rgb(50, 50, 50, 0.8);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.input:hover {
+    box-shadow: 0 0 20px rgba(255, 0, 204, 0.7), 0 0 40px rgba(255, 0, 204, 0.7), 0 0 60px rgba(255, 0, 204, 0.7), 0 0 80px rgba(255, 0, 204, 0.7);
+}
+
+.input .talk {
+    background: transparent;
+    outline: none;
+    border: none;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.input .talk i {
+    font-size: 20px;
+    color: #aed0d0;
+}
+
+.input .content {
+    color: #fff;
+    font-size: 15px;
+    margin-right: 20px;
+}
+
+</style>
+<body>
+    <section class="main">
+        <div class="image-container">
+            <div class="image">
+                <img src="alpha.jpg" alt="Voice Assistant Logo" class="logo">
+                <div class="neon"></div> <!-- This div will create the neon glow effect -->
+            </div>
+            <h1> A L P H A </h1>
+            <p>I'm your Alpha, How may I help you?</p>
+        </div>
+        <div class="input">
+            <button class="talk"><i class="fas fa-microphone-alt"></i></button>
+            <h1 class="content"> Click here to speak</h1>
+        </div>
+    </section>
+
+    <!-- Add the audio element here -->
+    <audio id="robotSound" src="robot_sound.mp3"></audio>
+
+    <script>
+        const btn = document.querySelector('.talk')
+        const content = document.querySelector('.content')
+        const logo = document.querySelector('.logo')
+        const robotSound = document.getElementById('robotSound')
+
+        function speak(text) {
+            const text_speak = new SpeechSynthesisUtterance(text);
+
+            text_speak.rate = 1.3;
+            text_speak.volume = 1.0;
+            text_speak.pitch = 3.5;
+            window.speechSynthesis.speak(text_speak);
+        }
+
+        function wishMe() {
+            const hour = new Date().getHours();
+            if (hour >= 0 && hour < 12) {
+                speak("Good Morning");
+            } else if (hour >= 12 && hour < 18) {
+                speak("Good Afternoon");
+            } else if (hour >= 18 && hour < 24) {
+                speak("Good Evening");
+            } else if (hour >= 0 && hour < 1) {
+                speak("Good Night");
+            }
+        }
+
+        window.addEventListener('load', () => {
+            robotSound.play();
+            speak("Initializing Alpha..");
+            wishMe();
+        });
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+
+        recognition.onresult = (event) => {
+            const currentIndex = event.resultIndex;
+            const transcript = event.results[currentIndex][0].transcript;
+            content.textContent = transcript;
+            takeCommand(transcript.toLowerCase());
+            animateLogo();
+        }
+
+        btn.addEventListener('click', () => {
+            content.textContent = "Listening...."
+            recognition.start();
+        })
+
+        function takeCommand(message) {
+            if (message.includes('hey') || message.includes('hello')) {
+                speak("Hello Sir, How May I Help You?");
+            } else if (message.includes("open google")) {
+                window.open("https://google.com", "_blank");
+                speak("Opening Google...")
+            } else if (message.includes("open youtube")) {
+                window.open("https://youtube.com", "_blank");
+                speak("Opening Youtube...")
+            } else if (message.includes("open facebook")) {
+                window.open("https://facebook.com", "_blank");
+                speak("Opening Facebook...")
+            } else if (message.includes('what is') || message.includes('who is') || message.includes('what are')) {
+                window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
+                const finalText = "This is what I found on the internet regarding " + message;
+                speak(finalText);
+            } else if (message.includes('wikipedia')) {
+                window.open(`https://en.wikipedia.org/wiki/${message.replace("wikipedia", "")}`, "_blank");
+                const finalText = "This is what I found on Wikipedia regarding " + message;
+                speak(finalText);
+            } else if (message.includes('time')) {
+                const time = new Date().toLocaleString(undefined, { hour: "numeric", minute: "numeric" })
+                const finalText = time;
+                speak(finalText);
+            } else if (message.includes('date')) {
+                const date = new Date().toLocaleString(undefined, { month: "short", day: "numeric" })
+                const finalText = date;
+                speak(finalText);
+            } 
+            else if (message.includes('calculator')) 
+            {
+                window.open('Calculator:///')
+                const finalText = "Opening Calculator";
+                speak(finalText);
+            } 
+            else if (message.includes('open chat gpt')) 
+            {
+                window.open('https://chat.openai.com/chat')
+                const finalText = "Opening ChatGPT";
+                speak(finalText);
+            }
+            else 
+            {
+                window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
+                const finalText = "I found some information for " + message + " on Google";
+                speak(finalText);
+            }
+        }
+
+        function animateLogo() {
+            logo.classList.add('animate-logo');
+            setTimeout(() => {
+                logo.classList.remove('animate-logo');
+            }, 1500); // Adjust the timeout duration as needed
+        }
+    </script>
+</body>
+</html>
